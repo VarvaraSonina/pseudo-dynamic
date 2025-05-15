@@ -55,6 +55,13 @@
       font-size: 0.75rem;
       color: #555;
     }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    a:hover {
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
@@ -89,13 +96,15 @@
         card.className = "card";
 
         card.innerHTML = `
-          <a href="${obj.link}" target="_blank">
+          <a href="${obj.image}" target="_blank">
             <img src="${obj.image}" alt="${obj.title}">
           </a>
-          <div class="card-content">
-            <div class="card-title">${obj.title}</div>
-            <div class="card-description">${obj.description}</div>
-          </div>
+          <a href="${obj.link}" target="_blank">
+            <div class="card-content">
+              <div class="card-title">${obj.title}</div>
+              <div class="card-description">${obj.description}</div>
+            </div>
+          </a>
         `;
 
         gallery.appendChild(card);
