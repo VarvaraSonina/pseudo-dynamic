@@ -1,141 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>The Art of N. de Garis Davies</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Personal CV Website Directory</title>
   <style>
-    :root {
-      --papyrus: #fdf6e3;
-      --lapis: #4b6a74;
-      --hematite: #8b5c4a;
-      --sandstone: #d9c9a3;
-      --desert-shadow: rgba(0, 0, 0, 0.06);
-      --ink: #2f2f2f;
-      --gray: #666;
-    }
-
     body {
-      font-family: 'Georgia', serif;
-      background-color: var(--papyrus);
-      color: var(--ink);
-      margin: 0;
-      padding: 2rem;
+      font-family: Georgia, 'Times New Roman', serif;
+      background-color: #f8f5f2;
+      color: #333;
+      max-width: 700px;
+      margin: auto;
+      padding: 3em 1.5em;
+      line-height: 1.6;
     }
 
     h1 {
-      text-align: center;
-      margin-bottom: 2rem;
-      font-size: 2rem;
-      color: var(--lapis);
-      border-bottom: 2px solid var(--sandstone);
-      padding-bottom: 0.5rem;
-      letter-spacing: 0.03em;
+      font-size: 2em;
+      margin-bottom: 1em;
+      border-bottom: 2px solid #ccc;
+      padding-bottom: 0.3em;
     }
 
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 1.8rem;
-    }
-
-    .card {
-      background-color: #fcfaf5;
-      border: 1px solid var(--sandstone);
-      border-radius: 8px;
-      box-shadow: 0 2px 6px var(--desert-shadow);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      transition: transform 0.2s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-2px);
-    }
-
-    .card img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-bottom: 1px solid var(--sandstone);
-    }
-
-    .card-content {
-      padding: 1rem;
-      background-color: #fffef9;
-    }
-
-    .card-title {
-      font-size: 1rem;
-      font-weight: bold;
-      margin-bottom: 0.4rem;
-      color: var(--hematite);
-    }
-
-    .card-description {
-      font-size: 0.8rem;
-      color: var(--gray);
-      line-height: 1.5;
+    p {
+      margin-bottom: 2em;
     }
 
     a {
       text-decoration: none;
-      color: inherit;
-    }
-
-    a:hover .card-title {
-      color: var(--lapis);
+      color: #0066cc;
+      font-weight: bold;
+      transition: color 0.3s ease;
     }
 
     a:hover {
-      text-decoration: none;
+      color: #004499;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      background: #fff;
+      padding: 1em;
+      margin-bottom: 1em;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+      transition: transform 0.2s ease;
+    }
+
+    li:hover {
+      transform: translateY(-2px);
+    }
+
+    .no-link {
+      color: #aaa;
+      text-decoration: line-through;
+      cursor: not-allowed;
+      font-style: italic;
     }
   </style>
 </head>
 <body>
-  <h1>The Art of N. de Garis Davies in the Met</h1>
-  <div class="gallery" id="gallery"></div>
+  <h1>Personal CV Website Directory</h1>
+
+  <p>
+    <a href="https://docs.google.com/spreadsheets/d/1VBVZlviaFWJ0L2JX4A2HyWmc30UwDqUTb3RlgLkORWA/edit?usp=sharing" target="_blank">
+        ➕ Add your website to the list
+    </a>
+  </p>
+
+  <ul id="link-list"></ul>
 
   <script>
-    let objects = [];
+    const jsonUrl = "https://api.sheetbest.com/sheets/0cd08c73-9ea2-49d1-8f83-e8652144cce5";
 
-    const endpoint = 'https://api.sheetbest.com/sheets/f90fc378-8e9a-4850-9783-c500e6b6dbdd';
-
-    fetch(endpoint)
-      .then(response => response.json())
-      .then(data => {
-        data.forEach(item => {
-          objects.push({
-            title: item.Title,
-            image: item.Image,
-            description: item.Description,
-            link: item.Link
-          });
-        });
-        renderGallery();
+    fetch(jsonUrl)
+      .then(response => {
+        if (!response.ok) throw new Error("Network response was not ok");
+        return response.json();
       })
-      .catch(error => console.error('Error fetching data:', error));
-    
-    function renderGallery() {
-      const gallery = document.getElementById("gallery");
+      .then(data => {
+        const list = document.getElementById("link-list");
 
-      objects.forEach(obj => {
-        const card = document.createElement("div");
-        card.className = "card";
+        data.forEach(item => {
+          if (item.HW !== 'pd') return; // Skip all items from other homeworks
+          
+          const li = document.createElement("li");
 
-        card.innerHTML = `
-          <a href="${obj.link}" target="_blank">
-            <img src="${obj.image}" alt="${obj.title}">
-            <div class="card-content">
-              <div class="card-title">${obj.title}</div>
-              <div class="card-description">${obj.description}</div>
-            </div>
-          </a>
-        `;
+          if (item.Website) {
+            const link = document.createElement("a");
+            link.href = item.Website;
+            link.textContent = item.Name;
+            link.target = "_blank";
+            li.appendChild(link);
+          } else {
+            const span = document.createElement("span");
+            span.textContent = item.Name;
+            span.className = "no-link";
+            li.appendChild(span);
+          }
 
-        gallery.appendChild(card);
+          list.appendChild(li);
+        });
+      })
+      .catch(error => {
+        console.error("Error fetching JSON:", error);
       });
-    }
   </script>
 </body>
 </html>
