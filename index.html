@@ -106,10 +106,10 @@
       .then(data => {
         data.forEach(item => {
           objects.push({
-            title: item.Title,
-            description: item.description,
-            image: item.image,
-            imageURL: item.imageURL
+            Title: item.Title,
+            Description: item.description,
+            Image: item.image,
+            ImageURL: item.imageURL
           });
         });
         renderGallery();
